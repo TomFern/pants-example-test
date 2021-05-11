@@ -1,0 +1,53 @@
+version: v1.0
+name: Initial Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: 'Block #1'
+    task:
+      jobs:
+        - name: package
+          commands:
+            - checkout
+            - sem-version python 3.8
+            - cache restore pants
+            - cache restore dist
+            - './pants package ::'
+            - cache store dist dist
+            - cache store pants $HOME/.cache/pants
+      env_vars:
+        - name: PANTS_CONFIG_FILES
+          value: pants.ci.toml
+  - name: 'Block #2'
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sem-version python 3.8
+          - cache restore pants
+      jobs:
+        - name: lint
+          commands:
+            - './pants lint ::'
+        - name: typecheck
+          commands:
+            - './pants typecheck ::'
+      env_vars:
+        - name: PANTS_CONFIG_FILES
+          value: pants.ci.toml
+  - name: 'Block #3'
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sem-version python 3.8
+          - cache restore pants
+      jobs:
+        - name: units
+          commands:
+            - './pants test ::'
+      env_vars:
+        - name: PANTS_CONFIG_FILES
+          value: pants.ci.toml
