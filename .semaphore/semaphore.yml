@@ -17,6 +17,9 @@ blocks:
             - './pants package ::'
             - cache store dist dist
             - cache store pants $HOME/.cache/pants
+      env_vars:
+        - name: PANTS_CONFIG_FILES
+          value: pants.ci.toml
   - name: 'Block #2'
     task:
       prologue:
@@ -31,6 +34,9 @@ blocks:
         - name: typecheck
           commands:
             - './pants typecheck ::'
+      env_vars:
+        - name: PANTS_CONFIG_FILES
+          value: pants.ci.toml
   - name: 'Block #3'
     task:
       prologue:
@@ -42,3 +48,6 @@ blocks:
         - name: units
           commands:
             - './pants test ::'
+      env_vars:
+        - name: PANTS_CONFIG_FILES
+          value: pants.ci.toml
