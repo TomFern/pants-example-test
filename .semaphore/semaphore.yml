@@ -8,10 +8,37 @@ blocks:
   - name: 'Block #1'
     task:
       jobs:
-        - name: 'Job #1'
+        - name: package
           commands:
             - checkout
             - sem-version python 3.8
             - cache restore pants
-            - './pants test ::'
+            - cache restore dist
+            - './pants package ::'
+            - cache store dist dist
             - cache store pants $HOME/.cache/pants
+  - name: 'Block #2'
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sem-version python 3.8
+          - cache restore pants
+      jobs:
+        - name: lint
+          commands:
+            - './pants lint ::'
+        - name: typecheck
+          commands:
+            - './pants typecheck ::'
+  - name: 'Block #3'
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sem-version python 3.8
+          - cache restore pants
+      jobs:
+        - name: units
+          commands:
+            - './pants test ::'
