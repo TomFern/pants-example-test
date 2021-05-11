@@ -12,6 +12,6 @@ blocks:
           commands:
             - checkout
             - sem-version python 3.8
-            - cache restore
-            - ./pants
-            - cache store
+            - cache restore pants
+            - './pants test ::'
+            - cache store pants $HOME/.cache/pants
