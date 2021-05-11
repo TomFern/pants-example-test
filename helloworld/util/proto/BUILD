@@ -12,3 +12,7 @@ protobuf_library()
 # `helloworld/util/proto/config_pb2.py`, and we need an `__init__.py` file in the folder for that file to be properly
 # recognized. Pants will automatically use this `__init__.py` file if it exists, even though we don't have a
 # `python_library` target here.
+
+python_library(
+    name="proto0",
+)
